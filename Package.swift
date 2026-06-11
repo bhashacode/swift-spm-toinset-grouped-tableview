@@ -1,21 +1,31 @@
-// swift-tools-version:5.3
-// The swift-tools-version declares the minimum version of Swift required to build this package.
+// swift-tools-version: 5.7
 
 import PackageDescription
 
 let package = Package(
     name: "TOInsetGroupedTableView",
     platforms: [
-        .iOS(.v11),
+        .iOS(.v15)
     ],
     products: [
-        .library(name: "TOInsetGroupedTableView", targets: ["TOInsetGroupedTableView"]),
+        .library(
+            name: "TOInsetGroupedTableView",
+            targets: ["TOInsetGroupedTableView"]
+        )
     ],
     targets: [
         .target(
             name: "TOInsetGroupedTableView",
-			dependencies: [],
-			path: "./TOInsetGroupedTableView/",
-			publicHeadersPath: "include")
-	]
+            path: "Sources/TOInsetGroupedTableView",
+            publicHeadersPath: "include",
+            linkerSettings: [
+                .linkedFramework("UIKit")
+            ]
+        ),
+        .testTarget(
+            name: "TOInsetGroupedTableViewTests",
+            dependencies: ["TOInsetGroupedTableView"],
+            path: "Tests/TOInsetGroupedTableViewTests"
+        )
+    ]
 )

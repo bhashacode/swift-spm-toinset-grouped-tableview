@@ -5,49 +5,58 @@
 </p>
 
 [![CI](https://github.com/TimOliver/TOInsetGroupedTableView/workflows/CI/badge.svg)](https://github.com/TimOliver/TOInsetGroupedTableView/actions?query=workflow%3ACI)
-[![Version](https://img.shields.io/cocoapods/v/TOInsetGroupedTableView.svg?style=flat)](http://cocoadocs.org/docsets/TOInsetGroupedTableView)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/TimOliver/TOInsetGroupedTableView/master/LICENSE)
-[![Platform](https://img.shields.io/cocoapods/p/TORoundedButton.svg?style=flat)](http://cocoadocs.org/docsets/TOInsetGroupedTableView)
+[![Platform](https://img.shields.io/badge/platform-iOS%2015.6%2B-blue.svg)](#requirements)
+[![SwiftPM](https://img.shields.io/badge/package-SwiftPM-orange.svg)](#installation)
 [![PayPal](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M4RKULAVKV7K8)
 [![Twitch](https://img.shields.io/badge/twitch-timXD-6441a5.svg)](http://twitch.tv/timXD)
 
-`TOInsetGroupedTableView` is a subclass of `UITableView` that back-ports the new "inset grouped" visual style introduced in iOS 13 to older versions of iOS. 
+`TOInsetGroupedTableView` is a `UITableView` subclass that preserves the original project API while this fork is distributed as a Swift Package Manager-only package.
 
-On iOS 13 and above, it defers back to using the system implementation, meaning absolutely no extra configuration code is required.
-
-This library is fantastic for developers adopting the new rounded corners style of table views in their apps, but are still supporting iOS 11 or iOS 12.
+The original library back-ported the iOS 13 `.insetGrouped` table-view style to older iOS releases. This fork's intended minimum runtime is iOS 15.6, so supported apps use the system inset-grouped implementation while keeping the same `TOInsetGroupedTableView` / `InsetGroupedTableView` integration surface.
 
 ## Features
-* Brings the modern rounded corners look to table views in previous versions of iOS.
-* All override behaviour is contained in the table view. No modifications of the cell views themselves is required.
-* Defers back to the system implementation on iOS 13 and higher.
-* As the code is only ever executed below iOS 13, there is no chance of future iOS releases breaking the build.
+
+* Keeps the existing Objective-C `TOInsetGroupedTableView` API and Swift `InsetGroupedTableView` name.
+* Uses the native system inset-grouped implementation on supported iOS versions.
+* Ships as a clean Swift Package Manager library product with no CocoaPods or Carthage integration.
+* Requires no package resources or third-party dependencies.
 
 ## Requirements
-* Xcode 11.0 or higher.
-* iOS 11.0 or higher.
+
+* Xcode 14 or newer recommended.
+* Swift Package Manager.
+* Minimum supported iOS runtime: 15.6.
+
+> SwiftPM cannot express iOS 15.6 exactly in `Package.swift`; the package manifest declares `.iOS(.v15)` and this README documents iOS 15.6 as the intended minimum runtime.
 
 ## Installation
 
-### Manual Installation
+### Swift Package Manager
 
-1. [Download](https://github.com/TimOliver/TOInsetGroupedTableView/archive/master.zip) the latest version of the `TOInsetGroupedTableView` repository.
-2. Inside the repository, copy the `TOInsetGroupedTableView` folder to your own Xcode project.
-3. Optionally, in Swift, make sure to add the header file to your Swift bridging header.
+In Xcode:
 
-### CocoaPods
+1. Open your project.
+2. Go to File > Add Package Dependencies.
+3. Enter this repository URL.
+4. Select the required version, branch, or commit.
+5. Add the `TOInsetGroupedTableView` package product to your app target.
 
-In your app's Podfile, add:
+Minimum supported iOS version: 15.6.
 
-```ruby
-pod 'TOInsetGroupedTableView'
-```
+If this fork does not have a release tag yet, select the branch or commit you want to consume when adding the package in Xcode.
 
 ## Usage
 
 Integrating `TOInsetGroupedTableView` is extremely simple as it introduces no new APIs or changes any external inputs. All that is needed is to replace `UITableView()` instantiations with `TOInsetGroupedTableView()`.
 
 ### Swift
+
+Import the package product's module:
+
+```swift
+import TOInsetGroupedTableView
+```
 
 In Swift, the class is renamed to `InsetGroupedTableView`. In order to integrate it, simply replace any instances of
 
@@ -59,18 +68,24 @@ with
 
 ```swift
 self.tableView = InsetGroupedTableView(frame: .zero)
-``` 
- 
- No other changes are needed.
- 
+```
+
+No other changes are needed.
+
 ### Objective-C
- 
- Just like in Swift, all that is required is to rename any instantiations of `UITableView` with `TOInsetGroupedTableView`.
- 
- For example, simply replace any instances of:
- 
- ```objc
- self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleInsetGrouped];
+
+Import the package product's public header:
+
+```objc
+#import <TOInsetGroupedTableView/TOInsetGroupedTableView.h>
+```
+
+Just like in Swift, all that is required is to rename any instantiations of `UITableView` with `TOInsetGroupedTableView`.
+
+For example, simply replace any instances of:
+
+```objc
+self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleInsetGrouped];
 ```
 
 with
@@ -79,10 +94,17 @@ with
 self.tableView = [[TOInsetGroupedTableView alloc] initWithFrame:CGRectZero];
 ```
 
+## SwiftPM package notes
+
+* `Package.swift` is located at the repository root.
+* The library product and target are both named `TOInsetGroupedTableView`.
+* Source files live under `Sources/TOInsetGroupedTableView/`.
+* Public headers live under `Sources/TOInsetGroupedTableView/include/`.
+* The package has no bundled resources and no third-party package dependencies.
+
 ## Credits
 
 `TOInsetGroupedTableView` was created by [Tim Oliver](http://twitter.com/TimOliverAU).
-
 
 ## How is this library different to [`TORoundedTableView`](https://github.com/TimOliver/TORoundedTableView)?
 
