@@ -1,15 +1,39 @@
 name: CI
 
-on: [push]
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
-
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Run all of the library unit tests.
-      run: '(curl -s -L http://tim.dev/install_ios_oss_ci | bash -s arg1 arg2) && bundle exec fastlane test'
-      env:
-        TEST_SCHEME: "TOInsetGroupedTableViewTests"
+      - uses: actions/checkout@v4
+
+      - name: Report toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+          xcrun --sdk iphoneos --show-sdk-version
+          xcrun --sdk iphonesimulator --show-sdk-version
+          xcode-select -p
+
+      - name: Validate SwiftPM metadata
+        run: |
+          swift package describe
+          swift package dump-package
+
+      - name: Build SwiftPM package for iOS
+        run: |
+          xcodebuild \
+            -scheme TOInsetGroupedTableView \
+            -destination 'generic/platform=iOS' \
+            build
+
+      - name: Build SwiftPM package for iOS Simulator
+        run: |
+          xcodebuild \
+            -scheme TOInsetGroupedTableView \
+            -destination 'generic/platform=iOS Simulator' \
+            build
